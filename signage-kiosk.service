@@ -1,0 +1,17 @@
+[Unit]
+Description=Chromium Kiosk für Signage Anzeige
+After=graphical.target signage.service
+Requires=signage.service
+
+[Service]
+Type=simple
+User=wag
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/wag/.Xauthority
+WorkingDirectory=/home/wag/signage
+ExecStart=/home/wag/signage/scripts/kiosk-start.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

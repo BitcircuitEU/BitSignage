@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signage Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Signage Dashboard</h1>
+        <p>Raspberry Pi 5B Signage &bull; Status &amp; Steuerung</p>
+      </div>
+      <div class="status-indicator" id="wsStatus">Offline</div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>PDF-Status</h2>
+        <div class="detail"><span>Datei:</span><strong id="pdfPath">-</strong></div>
+        <div class="detail"><span>Größe:</span><strong id="pdfSize">-</strong></div>
+        <div class="detail"><span>Letzte Aktualisierung:</span><strong id="pdfUpdated">-</strong></div>
+        <div class="actions">
+          <button id="reloadPdf">PDF neu laden</button>
+          <a class="secondary" href="/display.html" target="_blank">Anzeige öffnen</a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Display / TV</h2>
+        <div class="detail"><span>Status:</span><strong id="tvStatus">Unbekannt</strong></div>
+        <div class="actions">
+          <button id="tvOn">TV einschalten</button>
+          <button id="tvOff" class="danger">TV ausschalten</button>
+        </div>
+        <small id="tvError"></small>
+      </section>
+
+      <section class="card">
+        <h2>System</h2>
+        <div class="detail"><span>Hostname:</span><strong id="hostName">-</strong></div>
+        <div class="detail"><span>Uptime:</span><strong id="uptime">-</strong></div>
+        <div class="detail"><span>Serverzeit:</span><strong id="serverTime">-</strong></div>
+      </section>
+    </main>
+
+    <script src="/js/app.js" defer></script>
+  </body>
+</html>

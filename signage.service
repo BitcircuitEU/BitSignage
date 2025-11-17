@@ -1,0 +1,19 @@
+[Unit]
+Description=Raspberry Pi Signage Node Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=wag
+WorkingDirectory=/home/wag/signage
+Environment=NODE_ENV=production
+Environment=NVM_DIR=/home/wag/.nvm
+ExecStart=/bin/bash -lc 'npm run start'
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/signage-server.log
+StandardError=append:/var/log/signage-server.log
+
+[Install]
+WantedBy=multi-user.target

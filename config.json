@@ -1,0 +1,9 @@
+{
+  "port": 3000,
+  "pdfPath": "/mnt/media/latest.pdf",
+  "displayUrl": "http://localhost:3000/display.html",
+  "pollIntervalSeconds": 5,
+  "cec": {
+    "logicalAddress": 0
+  }
+}
