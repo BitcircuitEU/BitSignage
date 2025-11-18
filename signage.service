@@ -9,6 +9,7 @@ User=wag
 WorkingDirectory=/home/wag/signage
 Environment=NODE_ENV=production
 Environment=NVM_DIR=/home/wag/.nvm
+ExecStartPre=/bin/bash -lc 'echo "on 0" | cec-client -s'
 ExecStart=/bin/bash -lc 'npm run start'
 Restart=always
 RestartSec=5

@@ -18,6 +18,12 @@
     "state": "NW",
     "cacheHours": 12
   },
+  "cecSchedule": {
+    "enabled": true,
+    "onHour": 8,
+    "offHour": 16,
+    "intervalMinutes": 5
+  },
   "cec": {
     "logicalAddress": 0,
     "targetAddress": 0,

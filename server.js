@@ -76,6 +76,8 @@ let cecDevicesCache = {
   data: null,
   timestamp: 0,
 };
+let lastCecOnSentAt = 0;
+let lastCecStandbySentAt = 0;
 
 const weatherConfig = {
   lat: config.weather?.lat ?? 52.31,
@@ -86,6 +88,12 @@ const weatherConfig = {
 };
 const weatherCacheMs = Math.max(weatherConfig.cacheMinutes, 1) * 60 * 1000;
 const CEC_DEVICE_CACHE_MS = 30 * 1000;
+const cecScheduleConfig = {
+  enabled: config.cecSchedule?.enabled !== false,
+  onHour: Number(config.cecSchedule?.onHour ?? 8),
+  offHour: Number(config.cecSchedule?.offHour ?? 16),
+  intervalMinutes: Math.max(Number(config.cecSchedule?.intervalMinutes ?? 5), 1),
+};
 
 const cecController = new CecController({
   logicalAddress: config.cec?.logicalAddress ?? config.cec?.targetAddress ?? 0,
@@ -182,6 +190,56 @@ async function getCecDevices(forceRefresh = false) {
     };
     return payload;
   }
+}
+
+function isWithinCecOnWindow(date) {
+  const onHour = cecScheduleConfig.onHour % 24;
+  const offHour = cecScheduleConfig.offHour % 24;
+  const hour = date.getHours();
+
+  if (onHour === offHour) {
+    return true;
+  }
+
+  if (onHour < offHour) {
+    return hour >= onHour && hour < offHour;
+  }
+
+  return hour >= onHour || hour < offHour;
+}
+
+function startCecScheduler() {
+  if (!cecScheduleConfig.enabled) {
+    return;
+  }
+  const intervalMs = Math.max(cecScheduleConfig.intervalMinutes * 60 * 1000, 60 * 1000);
+
+  const tick = async () => {
+    const now = new Date();
+    const nowMs = Date.now();
+    const withinWindow = isWithinCecOnWindow(now);
+
+    if (withinWindow) {
+      if (nowMs - lastCecOnSentAt >= intervalMs) {
+        try {
+          await cecController.turnOn();
+          lastCecOnSentAt = nowMs;
+        } catch (error) {
+          console.error('CEC-Scheduler turnOn fehlgeschlagen:', error.message);
+        }
+      }
+    } else if (nowMs - lastCecStandbySentAt >= intervalMs) {
+      try {
+        await cecController.turnOff();
+        lastCecStandbySentAt = nowMs;
+      } catch (error) {
+        console.error('CEC-Scheduler standby fehlgeschlagen:', error.message);
+      }
+    }
+  };
+
+  tick();
+  setInterval(tick, 60 * 1000);
 }
 
 async function refreshPdfInfo(reason = 'manual') {
@@ -444,6 +502,7 @@ const PORT = config.port || 3000;
 
 (async () => {
   await refreshPdfInfo('startup');
+  startCecScheduler();
   server.listen(PORT, () => {
     console.log(`Signage-Server läuft auf Port ${PORT}`);
   });
