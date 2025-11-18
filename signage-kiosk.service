@@ -1,11 +1,12 @@
 [Unit]
 Description=Chromium Kiosk für Signage Anzeige
-After=graphical.target signage.service
+After=network-online.target signage.service
+Wants=network-online.target
 Requires=signage.service
 
 [Service]
 Type=simple
-User=wag
+User=root
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=/home/wag/.Xauthority
 WorkingDirectory=/home/wag/signage
@@ -14,4 +15,4 @@ Restart=always
 RestartSec=5
 
 [Install]
-WantedBy=graphical.target
+WantedBy=multi-user.target

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,38 +22,229 @@
         height: 100%;
         border: none;
         background: #000;
+        z-index: 0;
       }
       #overlay {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: rgba(0, 0, 0, 0.45);
-        padding: 0.8rem 1.2rem;
-        border-radius: 0.5rem;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 27rem;
+        background: rgba(0, 0, 0, 0.68);
+        padding: 2.25rem 2.25rem 2rem;
+        border-radius: 1rem;
         font-family: 'Segoe UI', system-ui, sans-serif;
         text-align: right;
+        box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 2;
       }
       #overlay .time {
-        font-size: 2rem;
+        font-size: 3rem;
         line-height: 1;
+        font-weight: 600;
+        letter-spacing: 0.04em;
       }
       #overlay .date {
+        margin-top: 0.4rem;
+        font-size: 1.2rem;
+        opacity: 0.85;
+      }
+
+      #weatherWidget {
+        position: absolute;
+        top: 1.5rem;
+        left: 1.5rem;
+        width: 27rem;
+        background: rgba(0, 0, 0, 0.72);
+        border-radius: 1rem;
+        padding: 2.25rem 2.25rem 2rem;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        color: #fff;
+        z-index: 2;
+      }
+      #weatherWidget .weather-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.8rem;
+      }
+      #weatherWidget .location {
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      #weatherWidget .updated {
+        font-size: 0.85rem;
+        opacity: 0.7;
+      }
+      #weatherWidget img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+      }
+      #weatherWidget .weather-temp {
+        font-size: 4rem;
+        font-weight: 600;
+        margin: 0.35rem 0 0.5rem;
+        letter-spacing: 0.03em;
+      }
+      #weatherWidget .weather-desc {
+        text-transform: capitalize;
+        font-size: 1.25rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+      }
+      #weatherWidget .weather-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.85rem;
+        font-size: 0.95rem;
+        opacity: 0.9;
+      }
+      #weatherWidget .weather-meta span {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 0.25rem 0.55rem;
+        border-radius: 999px;
+      }
+      #weatherWidget .forecast-title {
+        margin-top: 1.6rem;
         font-size: 1rem;
+        opacity: 0.85;
+        letter-spacing: 0.02em;
+      }
+      #weatherWidget .forecast-list {
+        margin-top: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      #weatherWidget .forecast-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.3rem;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 0.85rem 1.1rem;
+        border-radius: 0.75rem;
+      }
+      #weatherWidget .forecast-item .label {
+        font-weight: 600;
+      }
+      #weatherWidget .forecast-item .details {
+        text-align: right;
+        line-height: 1.35;
+      }
+      #weatherWidget .forecast-item .details span {
+        display: block;
+        font-size: 1.1rem;
+        opacity: 0.85;
+      }
+      #weatherWidget .warnings-title {
+        margin-top: 1.4rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
         opacity: 0.8;
       }
-      #overlay .status {
+      #weatherWidget .warnings-list {
+        margin-top: 0.7rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      #weatherWidget .warning-item {
+        background: rgba(255, 0, 0, 0.08);
+        border-left: 3px solid rgba(255, 0, 0, 0.5);
+        padding: 0.65rem 0.85rem;
+        border-radius: 0.6rem;
+        text-align: left;
+        font-size: 0.95rem;
+      }
+      #weatherWidget .warning-item strong {
+        display: block;
+        font-size: 1rem;
+      }
+      #weatherWidget .warning-item span {
+        display: block;
         font-size: 0.85rem;
-        margin-top: 0.4rem;
-        opacity: 0.7;
+        opacity: 0.8;
+      }
+      #weatherWidget .warning-item.no-warnings {
+        background: rgba(34, 197, 94, 0.12);
+        border-left-color: rgba(34, 197, 94, 0.6);
+        color: #d1fae5;
+      }
+      #weatherWidget .warning-item.no-warnings span {
+        opacity: 0.9;
+      }
+      #overlay .events-title {
+        margin-top: 1.5rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.75;
+      }
+      #overlay .events-list {
+        margin-top: 0.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        text-align: left;
+      }
+      #overlay .event-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.6rem;
+        font-size: 0.95rem;
+      }
+      #overlay .event-item .label {
+        font-weight: 600;
+      }
+      #overlay .event-item .date {
+        font-size: 0.9rem;
+        opacity: 0.85;
       }
     </style>
   </head>
   <body>
-    <iframe id="pdfFrame" title="Signage PDF" src="/pdf/latest"></iframe>
+    <div id="weatherWidget">
+      <div class="weather-header">
+        <div>
+          <div class="location" id="weatherLocation">Hörstel</div>
+          <div class="updated" id="weatherUpdated">--:--</div>
+        </div>
+        <img id="weatherIcon" alt="Wetter Icon" hidden />
+      </div>
+      <div class="weather-temp" id="weatherTemp">--°</div>
+      <div class="weather-desc" id="weatherDesc">Wetter unbekannt</div>
+      <div class="weather-meta">
+        <span id="weatherFeels">Gefühlt --°</span>
+        <span id="weatherHigh">↑ --°</span>
+        <span id="weatherLow">↓ --°</span>
+        <span id="weatherHumidity">--%</span>
+      </div>
+      <div class="forecast-title">Regenvorschau (7 Tage)</div>
+      <div class="forecast-list" id="weatherForecast"></div>
+      <div class="warnings-title">Wetterwarnungen</div>
+      <div class="warnings-list" id="weatherWarnings"></div>
+    </div>
+    <iframe
+      id="pdfFrame"
+      title="Signage PDF"
+      src="/pdf/latest#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&view=Fit"
+    ></iframe>
     <div id="overlay">
-      <div class="time" id="clockTime">--:--</div>
+      <div class="time" id="clockTime">--:--:--</div>
       <div class="date" id="clockDate">--.--.--</div>
-      <div class="status" id="pdfStatus">PDF: unbekannt</div>
+      <div class="events-title">Feiertage & Termine</div>
+      <div class="events-list" id="eventList"></div>
     </div>
     <script src="/js/pdf-viewer.js" defer></script>
   </body>

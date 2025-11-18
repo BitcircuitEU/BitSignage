@@ -3,8 +3,6 @@ set -euo pipefail
 
 PI_USER="wag"
 APP_DIR="/home/${PI_USER}/signage"
-NVM_DIR="/home/${PI_USER}/.nvm"
-NODE_VERSION="20"
 SERVICES=("signage.service" "signage-kiosk.service")
 
 log() {
@@ -35,7 +33,9 @@ install_packages() {
     x11-xserver-utils
     unclutter
     rclone
-    fuse
+    fuse3
+    nodejs
+    npm
   )
   log "Installiere benötigte Debian-Pakete"
   export DEBIAN_FRONTEND=noninteractive
@@ -43,31 +43,9 @@ install_packages() {
   apt-get install -y --no-install-recommends "${packages[@]}"
 }
 
-setup_nvm_node() {
-  if [[ ! -d "${NVM_DIR}" ]]; then
-    log "Installiere NVM für Benutzer ${PI_USER}"
-    run_as_pi "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash"
-  else
-    log "NVM bereits vorhanden – überspringe Installation"
-  fi
-
-  local nvm_cmd="export NVM_DIR='${NVM_DIR}' && \
-    [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" && \
-    nvm install ${NODE_VERSION} && \
-    nvm alias default ${NODE_VERSION} && \
-    nvm use ${NODE_VERSION}"
-
-  log "Installiere Node.js ${NODE_VERSION} via NVM (User ${PI_USER})"
-  run_as_pi "${nvm_cmd}"
-}
-
 install_node_dependencies() {
-  local nvm_env="export NVM_DIR='${NVM_DIR}' && \
-    [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" && \
-    nvm use ${NODE_VERSION} >/dev/null"
-
   log "Installiere npm-Abhängigkeiten im Projekt"
-  run_as_pi "cd '${APP_DIR}' && ${nvm_env} && npm install"
+  run_as_pi "cd '${APP_DIR}' && npm install"
 }
 
 deploy_services() {
@@ -95,7 +73,6 @@ ensure_permissions() {
 main() {
   require_root
   install_packages
-  setup_nvm_node
   install_node_dependencies
   ensure_permissions
   deploy_services

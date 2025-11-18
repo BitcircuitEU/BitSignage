@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,6 +23,7 @@
         <div class="detail"><span>Letzte Aktualisierung:</span><strong id="pdfUpdated">-</strong></div>
         <div class="actions">
           <button id="reloadPdf">PDF neu laden</button>
+          <button id="reloadPage" type="button">Seite neu laden</button>
           <a class="secondary" href="/display.html" target="_blank">Anzeige öffnen</a>
         </div>
       </section>
@@ -30,11 +31,150 @@
       <section class="card">
         <h2>Display / TV</h2>
         <div class="detail"><span>Status:</span><strong id="tvStatus">Unbekannt</strong></div>
+        <div class="detail detail-column">
+          <span>CEC-Geräte:</span>
+          <div id="tvDeviceList" class="device-list">
+            <div class="device-chip device-chip-muted">Keine Daten</div>
+          </div>
+        </div>
         <div class="actions">
-          <button id="tvOn">TV einschalten</button>
-          <button id="tvOff" class="danger">TV ausschalten</button>
+          <button id="tvOn" type="button">TV einschalten</button>
+          <button id="tvOff" class="danger" type="button">TV ausschalten</button>
         </div>
         <small id="tvError"></small>
+      </section>
+
+      <section class="card" id="cecControls">
+        <h2>CEC-Fernbedienung</h2>
+        <p>Direkte Steuerung des Samsung TVs über HDMI-CEC / Anynet+.</p>
+
+        <div class="control-group">
+          <h3>Navigation & Menüs</h3>
+          <div class="cec-nav">
+            <button type="button" class="cec-key" data-cec-key="home">Home</button>
+            <button type="button" class="cec-key" data-cec-key="anReturn">Zurück</button>
+            <button type="button" class="cec-key" data-cec-key="menu">Menü</button>
+            <button type="button" class="cec-key" data-cec-key="info">Info</button>
+          </div>
+          <div class="cec-nav-grid">
+            <button type="button" class="cec-key" data-cec-key="up">▲</button>
+            <button type="button" class="cec-key" data-cec-key="left">◀</button>
+            <button type="button" class="cec-key cec-key-ok" data-cec-key="ok">OK</button>
+            <button type="button" class="cec-key" data-cec-key="right">▶</button>
+            <button type="button" class="cec-key" data-cec-key="down">▼</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h3>Audio & Sender</h3>
+          <div class="button-row">
+            <button type="button" class="cec-key" data-cec-key="volumeUp">Vol +</button>
+            <button type="button" class="cec-key" data-cec-key="volumeDown">Vol -</button>
+            <button type="button" class="cec-key" data-cec-key="mute">Mute</button>
+            <button type="button" class="cec-key" data-cec-key="chplus">CH +</button>
+            <button type="button" class="cec-key" data-cec-key="chminus">CH -</button>
+            <button type="button" class="cec-key" data-cec-key="channelList">Senderliste</button>
+            <button type="button" class="cec-key" data-cec-key="guide">Guide</button>
+            <button type="button" class="cec-key" data-cec-key="source">Quelle</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h3>Wiedergabe</h3>
+          <div class="button-row">
+            <button type="button" class="cec-key" data-cec-key="play">Play</button>
+            <button type="button" class="cec-key" data-cec-key="pause">Pause</button>
+            <button type="button" class="cec-key" data-cec-key="stop">Stop</button>
+            <button type="button" class="cec-key" data-cec-key="rewind"><<</button>
+            <button type="button" class="cec-key" data-cec-key="fastForward">>></button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h3>Quelle & Status</h3>
+          <div class="button-row">
+            <button type="button" id="tvActiveSource">Als aktive Quelle melden</button>
+            <button type="button" id="tvRequestActiveSource">Aktive Quelle abfragen</button>
+            <button type="button" class="cec-key" data-cec-key="powerOn">Power On</button>
+            <button type="button" class="cec-key" data-cec-key="powerOff">Power Off</button>
+          </div>
+        </div>
+
+        <form id="customKeyForm" class="control-form">
+          <h3>Benutzerdefinierter Key</h3>
+          <label>
+            Taste
+            <select id="customKeySelect">
+              <option value="home">Home / Smart Hub</option>
+              <option value="anReturn">Zurück</option>
+              <option value="ok">OK</option>
+              <option value="up">Pfeil oben</option>
+              <option value="down">Pfeil unten</option>
+              <option value="left">Pfeil links</option>
+              <option value="right">Pfeil rechts</option>
+              <option value="volumeUp">Volume +</option>
+              <option value="volumeDown">Volume -</option>
+              <option value="mute">Mute</option>
+              <option value="source">Quelle</option>
+              <option value="guide">Guide</option>
+              <option value="channelList">Senderliste</option>
+              <option value="play">Play</option>
+              <option value="pause">Pause</option>
+              <option value="stop">Stop</option>
+              <option value="record">Record</option>
+              <option value="powerOn">Power On</option>
+              <option value="powerOff">Power Off</option>
+              <option value="powertoggle">Power Toggle</option>
+            </select>
+          </label>
+          <label>
+            Haltezeit (ms)
+            <input type="number" id="customHold" min="0" step="50" placeholder="z.B. 200" />
+          </label>
+          <label>
+            Ziel-Adresse
+            <input type="number" id="customTarget" min="0" max="15" placeholder="Standard: 0" />
+          </label>
+          <button type="submit">Key senden</button>
+        </form>
+
+        <form id="sequenceForm" class="control-form">
+          <h3>Key-Sequenz</h3>
+          <label>
+            Keys (durch Komma oder Leerzeichen getrennt, z.B. <code>home,down,select</code>)
+            <input type="text" id="sequenceKeys" placeholder="z.B. home,down,ok" />
+          </label>
+          <label>
+            Verzögerung zwischen Keys (ms)
+            <input type="number" id="sequenceDelay" min="0" step="50" placeholder="Standard 250" />
+          </label>
+          <label>
+            Ziel-Adresse
+            <input type="number" id="sequenceTarget" min="0" max="15" placeholder="Standard: 0" />
+          </label>
+          <button type="submit">Sequenz senden</button>
+        </form>
+
+        <form id="vendorCommandForm" class="control-form">
+          <h3>Vendor Command</h3>
+          <label>
+            Payload (Hex, z.B. <code>5A 00 01</code>)
+            <input type="text" id="vendorPayload" placeholder="Hex-Bytes" />
+          </label>
+          <label>
+            Vendor ID (optional)
+            <input type="text" id="vendorId" placeholder="Standard: 0000F0" />
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" id="vendorIncludeId" checked />
+            Vendor ID mitsenden
+          </label>
+          <label>
+            Ziel-Adresse
+            <input type="number" id="vendorTarget" min="0" max="15" placeholder="Standard: 0" />
+          </label>
+          <button type="submit">Vendor Command senden</button>
+        </form>
       </section>
 
       <section class="card">

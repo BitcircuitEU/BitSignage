@@ -3,7 +3,26 @@
   "pdfPath": "/mnt/media/latest.pdf",
   "displayUrl": "http://localhost:3000/display.html",
   "pollIntervalSeconds": 5,
+  "weather": {
+    "lat": 52.31,
+    "lon": 7.58,
+    "name": "Hörstel",
+    "timezone": "Europe/Berlin",
+    "cacheMinutes": 10
+  },
+  "warnings": {
+    "points": ["52.31,7.58", "52.28,7.53"],
+    "cacheMinutes": 5
+  },
+  "holidays": {
+    "state": "NW",
+    "cacheHours": 12
+  },
   "cec": {
-    "logicalAddress": 0
+    "logicalAddress": 0,
+    "targetAddress": 0,
+    "sourceAddress": 4,
+    "physicalAddress": "1000",
+    "keyMap": {}
   }
 }

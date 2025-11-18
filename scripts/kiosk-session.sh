@@ -51,7 +51,6 @@ log "Starte Chromium im Kiosk-Modus"
   --disable-session-crashed-bubble \
   --disable-infobars \
   --check-for-update-interval=31536000 \
-  --disable-translate \
   --overscroll-history-navigation=0 \
   --incognito \
   --autoplay-policy=no-user-gesture-required \
